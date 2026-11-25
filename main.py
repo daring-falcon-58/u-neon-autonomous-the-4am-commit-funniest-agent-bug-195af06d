@@ -21,6 +21,10 @@ def main() -> None:
         os.makedirs(parent, exist_ok=True)
     with open(out, "w", encoding="utf-8", newline="\n") as f:
         f.write(LINE + "\n")
+    # Write-back self-check: prove the bytes on disk are exactly the
+    # winning line, so a truncated/partial write can never pass silently.
+    with open(out, "rb") as f:
+        assert f.read() == (LINE + "\n").encode("utf-8"), "output mismatch"
 
 
 if __name__ == "__main__":
